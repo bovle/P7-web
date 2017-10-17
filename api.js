@@ -38,7 +38,7 @@ router.post('/connect', (req, res) => {
     var code = data.code;
 
     if(!code){
-        res.json({succes: false, data: {message: "no code bro!"}});
+        res.json({succes: false, data: {message: "no code!"}});
     }
     
     var ip = dict[code];
