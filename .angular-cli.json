@@ -10,8 +10,7 @@
       "assets": [
         "assets",
         "favicon.ico",
-        "server.js",
-        "server"
+        { "glob": "**/*", "input": "./server/", "output": "./" }
       ],
       "index": "index.html",
       "main": "main.ts",
