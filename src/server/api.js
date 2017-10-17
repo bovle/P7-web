@@ -1,47 +1,19 @@
 const express = require('express');
 const router = express.Router();
 
-// Error handling
-const sendError = (err, res) => {
-    response.status = 501;
-    response.message = err;
-    res.status(501).json(response);
-};
 
-// Response handling
-let response = {
-    status: 200,
-    data: [],
-    message: null
-};
 
 // code ip dictionary
 var dict = {};
 
-// Get users
-router.get('/users', (req, res) => {
-    connection((db) => {
-        db.collection('users')
-            .find()
-            .toArray()
-            .then((users) => {
-                response.data = users;
-                res.json(response);
-            })
-            .catch((err) => {
-                sendError(err, res);
-            });
-    });
-});
-
 router.post('/host', (req, res) => {
     var data = req.body;
     if(!data){
-        sendError("no data", res);
+        res.json({succes: false, data: {message: "no data!"}});
     }
     var ip = data.ip;
     if(!ip){
-        sendError("no ip!", res);
+        res.json({succes: false, data: {message: "no ip!"}});
     }
 
     do{
@@ -54,28 +26,29 @@ router.post('/host', (req, res) => {
 
     dict[code] = ip;
 
-    response.data = code;
-    res.json(response);
+    res.json({succes: true, data: {code: code}});
 });
 
 router.post('/connect', (req, res) => {
     var data = req.body;
     if(!data){
-        sendError("no data", res);
+        
+        res.json({succes: false, data: {message: "no data!"}});
     }
-
+    
     var code = data.code;
 
-    if(!code)
-        sendError( "no code bro!", res);
+    if(!code){
+        res.json({succes: false, data: {message: "no code!"}});
+    }
     
     var ip = dict[code];
 
     if(!ip){
-        sendError( "no match", res);
+        res.json({succes: false, data: {message: "no ip found!"}});
     }
-    response.data = ip
-    res.json(response);
+
+    res.json({succes: true, data: {ip: ip}});
 });
 
 module.exports = router;
