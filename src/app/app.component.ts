@@ -8,9 +8,11 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 })
 export class AppComponent {
   private headers = new HttpHeaders().set('Content-Type', 'application/json');
-
+  private options = {
+    headers: this.headers
+  }
   connectionCode: string = "";
-  connectionUrl: string = "http://192.168.0.104:3000";
+  //connectionUrl: string = "https://bogaboxserver.azurewebsites.net";
 
   constructor(private http: HttpClient){
     /*console.log("hey");
@@ -29,9 +31,7 @@ export class AppComponent {
 
   connect() {
     this.http
-    .post(this.connectionUrl + "/connect", JSON.stringify({code: this.connectionCode}), {
-      headers: this.headers
-    })
+    .post("/api/connect", JSON.stringify({code: this.connectionCode}), this.options)
     .subscribe(data => { console.log(data); })
   }
 }
