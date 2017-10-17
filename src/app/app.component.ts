@@ -12,7 +12,6 @@ export class AppComponent {
     headers: this.headers
   }
   connectionCode: string = "";
-  //connectionUrl: string = "https://bogaboxserver.azurewebsites.net";
 
   constructor(private http: HttpClient){
     /*console.log("hey");

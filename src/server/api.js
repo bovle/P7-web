@@ -32,7 +32,6 @@ router.post('/host', (req, res) => {
 router.post('/connect', (req, res) => {
     var data = req.body;
     if(!data){
-        
         res.json({succes: false, data: {message: "no data!"}});
     }
     
