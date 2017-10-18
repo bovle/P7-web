@@ -7,11 +7,13 @@ var dict = {};
 router.post('/host', (req, res) => {
     var data = req.body;
     if(!data){
-        res.json({succes: false, data: {message: "no data!"}});
+        res.json({success: false, data: {message: "no data!"}});
+        return;
     }
     var ip = data.ip;
     if(!ip){
-        res.json({succes: false, data: {message: "no ip!"}});
+        res.json({success: false, data: {message: "no ip!"}});
+        return;
     }
 
     do{
@@ -24,28 +26,31 @@ router.post('/host', (req, res) => {
 
     dict[code] = ip;
 
-    res.json({succes: true, data: {code: code}});
+    res.json({success: true, data: {code: code}});
 });
 
 router.post('/connect', (req, res) => {
     var data = req.body;
     if(!data){
-        res.json({succes: false, data: {message: "no data!"}});
+        res.json({success: false, data: {message: "no data!"}});
+        return;
     }
     
     var code = data.code;
 
     if(!code){
-        res.json({succes: false, data: {message: "no code!"}});
+        res.json({success: false, data: {message: "no code!"}});
+        return;
     }
     
     var ip = dict[code];
 
     if(!ip){
-        res.json({succes: false, data: {message: "no ip found!"}});
+        res.json({success: false, data: {message: "no ip found!"}});
+        return;
     }
 
-    res.json({succes: true, data: {ip: ip}});
+    res.json({success: true, data: {ip: ip}});
 });
 
 module.exports = router;
