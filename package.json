@@ -4,9 +4,9 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "postinstall": "ng build --prod --aot",
+    "start": "node server.js",
     "build": "ng build",
-    "deploy": "ng build --prod && del /q .\\git-dist && xcopy /b/s/y .\\dist .\\git-dist && cd git-dist && git add --all && git commit -m \"Release at $(date)\" && git push",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
@@ -14,6 +14,8 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "^4.2.4",
+    "@angular/cli": "1.4.7",
+    "@angular/compiler-cli": "^4.2.4",
     "@angular/common": "^4.2.4",
     "@angular/compiler": "^4.2.4",
     "@angular/core": "^4.2.4",
@@ -29,8 +31,6 @@
     "zone.js": "^0.8.14"
   },
   "devDependencies": {
-    "@angular/cli": "1.4.7",
-    "@angular/compiler-cli": "^4.2.4",
     "@angular/language-service": "^4.2.4",
     "@types/jasmine": "~2.5.53",
     "@types/jasminewd2": "~2.0.2",
