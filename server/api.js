@@ -16,6 +16,12 @@ router.post('/host', (req, res) => {
         return;
     }
 
+    var port = data.port;
+    if(!port){
+        res.json({success: false, data: {message: "no port!"}});
+        return;
+    }
+
     do{
     var char1 = String.fromCharCode(97 + Math.floor(Math.random() * 26));
     var char2 = String.fromCharCode(97 + Math.floor(Math.random() * 26));
@@ -24,7 +30,7 @@ router.post('/host', (req, res) => {
     var code = char1 + char2 + char3 + char4;  
     }while(dict[code]);
 
-    dict[code] = ip;
+    dict[code] = ip + ":" + port;
 
     res.json({success: true, data: {code: code}});
 });
