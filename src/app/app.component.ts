@@ -25,7 +25,7 @@ export class AppComponent {
 
   connectToSocket()
   {
-    let socket = new WebSocket("ws://p7-webserver.herokuapp.com/");
+    let socket = new WebSocket("wss://p7-webserver.herokuapp.com/");
     socket.addEventListener('message', (event) => {
       console.log(event.data);
     });
