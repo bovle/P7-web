@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -7,13 +6,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  private headers = new HttpHeaders().set('Content-Type', 'application/json');
-  private options = {
-    headers: this.headers
-  }
   connectionCode: string = "";
 
-  constructor(private http: HttpClient){
+  constructor(){
     /*console.log("hey");
     let socket = new WebSocket("ws://localhost:5000");
     socket.addEventListener('message', (event) => {
@@ -28,27 +23,15 @@ export class AppComponent {
     
   }
 
-  getIpAndPort() {
-    this.http
-    .post("/api/connect", JSON.stringify({code: this.connectionCode}), this.options)
-    .subscribe((res: any) => { 
-      
-      if(res && res.success)
-      {
-        this.connectToSocket(res.data.ip);
-      }
-    })
-  }
-
-  connectToSocket(ip)
+  connectToSocket()
   {
-    let socket = new WebSocket("ws://" + ip);
+    let socket = new WebSocket("ws://localhost:3000");
     socket.addEventListener('message', (event) => {
       console.log(event.data);
     });
     socket.addEventListener('open', () => {
       socket.send(
-        JSON.stringify({type: "message", message: "hello from angular"})
+        JSON.stringify({type: "client_connection", payload: this.connectionCode})
       );
       
     });
