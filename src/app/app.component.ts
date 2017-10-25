@@ -25,7 +25,7 @@ export class AppComponent {
 
   connectToSocket()
   {
-    let socket = new WebSocket("ws://localhost:3000");
+    let socket = new WebSocket("ws://p7-webserver.herokuapp.com/");
     socket.addEventListener('message', (event) => {
       console.log(event.data);
     });
