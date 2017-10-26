@@ -54,7 +54,7 @@ wws.on("connection", (ws, req) => {
                     var game = games[message.payload];
                     if(game){
                         if(game.count > maxPlayers){
-                            ws.send("game is full");
+                            ws.send(JSON.stringify({type: "error", payload: "game is full"}));
                         }else{
                             var index = game.count;
                             game.clients[index] = ws;
@@ -63,13 +63,13 @@ wws.on("connection", (ws, req) => {
                             host.send(JSON.stringify({type: "player_joined", payload: index}));
                         }
                     }else{
-                        ws.send("no game with code:" + message.payload);
+                        ws.send(JSON.stringify({type: "error", payload: "no game with code:" + message.payload}));
                     }
                     break;
                 
                 case "host_to_client":
                     console.log(message);
-                    var data = JSON.parse(message.payload);
+                    var data = message.payload;
                     var game = games[data.code];
                     var client = game.clients[data.clientColor];
                     client.send(JSON.stringify({type: "message_from_host", payload: data.message}));
