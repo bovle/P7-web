@@ -46,7 +46,7 @@ wws.on("connection", (ws, req) => {
                     } while (games[code]);
                     games[code] = { host: ws, clients: [], count: 0 };
                      
-                    ws.send(JSON.stringify({options: { type:"code" }, package: code }));
+                    ws.send(JSON.stringify({options: { type:"code", code: code }}));
                     break;
 
                 case "client_connection":
