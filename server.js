@@ -24,8 +24,8 @@ server.listen(port, () => console.log(`Running on localhost:${port}`));
 
 //Websocket stuff
 
-const colors = ["red", "green", "blue", "white", "black", "yellow", "orange", "purple"];
-const maxPlayers = 7;
+const colors = ["none", "red", "green", "blue", "white", "black", "yellow", "orange", "purple"];
+const maxPlayers = 8;
 
 var games = {};
 
@@ -71,8 +71,15 @@ wws.on("connection", (ws, req) => {
                     console.log(message);
                     var options = message.options;
                     var game = games[options.code];
-                    var client = game.clients[options.color];
-                    client.send(JSON.stringify({options: { type: "package_from_host", packageType: options.packageType }, package: message.package}));
+                    if(game){
+                        var client = game.clients[options.color];
+                        if(client){
+                            client.send(JSON.stringify({options: { type: "package_from_host", packageType: options.packageType }, package: message.package}));
+                            break;
+                        }else
+                            ws.send(JSON.stringify({options: { type: "error" }, package: "no client with color:" + options.color}));
+                    }else
+                        ws.send(JSON.stringify({options: { type: "error" }, package: "no game with code:" + options.code}));
                     break;
                 default:
                     break;
