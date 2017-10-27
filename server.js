@@ -60,7 +60,8 @@ wws.on("connection", (ws, req) => {
                             var index = game.count;
                             game.clients[index] = ws;
                             var host = games[message.options.code].host;
-                            host.send(JSON.stringify({options: { type: "player_joined", color: index}}));
+                            host.send(JSON.stringify({options: { type: "client_joined", color: index}}));
+                            ws.send(JSON.stringify({options: { type: "color_change", color: index}}))
                         }
                     }else{
                         ws.send(JSON.stringify({options: { type: "error" }, package: "no game with code:" + message.options.code}));
