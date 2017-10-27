@@ -33,8 +33,8 @@ wws.on("connection", (ws, req) => {
     console.log(req.connection.remoteAddress + " connected to the server\n");
     ws.on("message", (data) => {
         var message = JSON.parse(data);
-        if (message && message.type) {
-            switch (message.type) {
+        if (message && message.options && message.options.type) {
+            switch (message.options.type) {
                 case "host_connection":
                     var code = "";
                     do {
@@ -46,33 +46,33 @@ wws.on("connection", (ws, req) => {
                     } while (games[code]);
                     games[code] = { host: ws, clients: [], count: 0 };
                      
-                    ws.send(JSON.stringify({type: "code", payload: code}));
+                    ws.send(JSON.stringify({options: { type:"code" }, package: code }));
                     break;
 
                 case "client_connection":
                     console.log(message);
-                    var game = games[message.payload];
+                    var game = games[message.options.code];
                     if(game){
                         if(game.count > maxPlayers){
-                            ws.send(JSON.stringify({type: "error", payload: "game is full"}));
+                            ws.send(JSON.stringify({options: { type: "error" }, package: "game is full"}));
                         }else{
+                            game.count++;
                             var index = game.count;
                             game.clients[index] = ws;
-                            game.count++;
-                            var host = games[message.payload].host;
-                            host.send(JSON.stringify({type: "player_joined", payload: index}));
+                            var host = games[message.options.code].host;
+                            host.send(JSON.stringify({options: { type: "player_joined", color: index}}));
                         }
                     }else{
-                        ws.send(JSON.stringify({type: "error", payload: "no game with code:" + message.payload}));
+                        ws.send(JSON.stringify({options: { type: "error" }, package: "no game with code:" + message.options.code}));
                     }
                     break;
                 
                 case "host_to_client":
                     console.log(message);
-                    var data = message.payload;
-                    var game = games[data.code];
-                    var client = game.clients[data.clientColor];
-                    client.send(JSON.stringify({type: "message_from_host", payload: data.message}));
+                    var options = message.options;
+                    var game = games[options.code];
+                    var client = game.clients[options.color];
+                    client.send(JSON.stringify({options: { type: "package_from_host", packageType: options.packageType }, package: message.package}));
                     break;
                 default:
                     break;
