@@ -4,7 +4,6 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "prestart": "ng build --prod --aot",
     "start": "node server.js",
     "build": "ng build",
     "test": "ng test",
