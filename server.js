@@ -99,7 +99,7 @@ wws.on("connection", (ws, req) => {
                     var host = game.host;
                     host.send(JSON.stringify({options: {type: "client_disconnected", color: index}}));
                 }else{
-                    game.clients.foreach((client) => {
+                    game.clients.forEach((client) => {
                         client.send(JSON.stringify({options: {type: "host_disconnected"}}));
                     });
                     games[code] = null;
