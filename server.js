@@ -20,7 +20,7 @@ const server = http.createServer(app);
 
 const wws = new WebSocket.Server({ server });
 
-server.listen(port, () => console.log(`Running on localhost:${port}`));
+server.listen(port);
 
 //Websocket stuff
 
@@ -31,12 +31,13 @@ var games = {};
 
 wws.on("connection", (ws, req) => {
     console.log(req.connection.remoteAddress + " connected to the server\n");
+    var code = "";
+    var index;
     ws.on("message", (data) => {
         var message = JSON.parse(data);
         if (message && message.options && message.options.type) {
             switch (message.options.type) {
                 case "host_connection":
-                    var code = "";
                     do {
                         var char1 = String.fromCharCode(97 + Math.floor(Math.random() * 26));
                         var char2 = String.fromCharCode(97 + Math.floor(Math.random() * 26));
@@ -51,20 +52,21 @@ wws.on("connection", (ws, req) => {
 
                 case "client_connection":
                     console.log(message);
-                    var game = games[message.options.code];
+                    code = message.options.code;
+                    var game = games[code];
                     if(game){
-                        if(game.count > maxPlayers){
+                        if(game.count >= maxPlayers){
                             ws.send(JSON.stringify({options: { type: "error" }, package: "game is full"}));
                         }else{
                             game.count++;
-                            var index = game.count;
+                            index = game.count;
                             game.clients[index] = ws;
-                            var host = games[message.options.code].host;
+                            var host = games[code].host;
                             host.send(JSON.stringify({options: { type: "client_joined", color: index}}));
                             ws.send(JSON.stringify({options: { type: "color_change", color: index}}))
                         }
                     }else{
-                        ws.send(JSON.stringify({options: { type: "error" }, package: "no game with code:" + message.options.code}));
+                        ws.send(JSON.stringify({options: { type: "error" }, package: "no game with code:" + code}));
                     }
                     break;
                 
@@ -84,6 +86,24 @@ wws.on("connection", (ws, req) => {
                     break;
                 default:
                     break;
+            }
+        }
+    });
+
+    ws.on("close", (data) => {
+        if(code){
+            var game = games[code];
+            if(game){
+                if(index){
+                    game.clients[index] = null;
+                    var host = game.host;
+                    host.send(JSON.stringify({options: {type: "client_disconnected", color: index}}));
+                }else{
+                    game.clients.foreach((client) => {
+                        client.send(JSON.stringify({options: {type: "host_disconnected"}}));
+                    });
+                    games[code] = null;
+                }
             }
         }
     });
