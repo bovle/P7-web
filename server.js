@@ -36,6 +36,7 @@ wws.on("connection", (ws, req) => {
     ws.on("message", (data) => {
         var message = JSON.parse(data);
         if (message && message.options && message.options.type) {
+            console.log(message);
             switch (message.options.type) {
                 case "host_connection":
                     do {
@@ -51,7 +52,6 @@ wws.on("connection", (ws, req) => {
                     break;
 
                 case "client_connection":
-                    console.log(message);
                     code = message.options.code;
                     var game = games[code];
                     if(game){
@@ -71,7 +71,6 @@ wws.on("connection", (ws, req) => {
                     break;
                 
                 case "host_to_client":
-                    console.log(message);
                     var options = message.options;
                     var game = games[options.code];
                     if(game){
@@ -100,8 +99,8 @@ wws.on("connection", (ws, req) => {
                     host.send(JSON.stringify({options: {type: "client_disconnected", color: index}}));
                 }else{
                     game.clients.forEach(function(client){
-                        
-                        client.send(JSON.stringify({options: {type: "host_disconnected"}}));
+                        if(client)
+                            client.send(JSON.stringify({options: {type: "host_disconnected"}}));
                     });
                     games[code] = null;
                 }
