@@ -83,6 +83,18 @@ wws.on("connection", (ws, req) => {
                     }else
                         ws.send(JSON.stringify({options: { type: "error" }, package: "no game with code:" + options.code}));
                     break;
+
+                case "client_to_host":
+                    var options = message.options;
+                    var game = games[options.code];
+                    if(game){
+                        var host = game.host;
+                        host.send(JSON.stringify({options: { type: "package_from_client", color: options.color, packageType: options.packageType }, package: message.package}));
+
+                    }else{
+                        ws.send(JSON.stringify({options: { type: "error" }, package: "no game with code:" + code}));
+                    }
+                    break;
                 default:
                     break;
             }
