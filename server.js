@@ -61,14 +61,14 @@ wws.on("connection", (ws, req) => {
                             game.count++;
                             var index;
                             for (index = 0; index < maxPlayers; index++) {
-                                if(game.clients[index] == null){
+                                if(!game.clients[index]){
                                     game.clients[index] = ws;
                                     break;
                                 }
                             }
                             var host = game.host;
                             host.send(JSON.stringify({options: { type: "client_joined", color: index}}));
-                            ws.send(JSON.stringify({options: { type: "color_change", color: index}}))
+                            ws.send(JSON.stringify({options: { type: "color_change", color: index}}));
                         }
                     }else{
                         ws.send(JSON.stringify({options: { type: "error" }, package: "no game with code:" + code}));
@@ -96,6 +96,29 @@ wws.on("connection", (ws, req) => {
                         var host = game.host;
                         host.send(JSON.stringify({options: { type: "package_from_client", color: options.color, packageType: options.packageType }, package: message.package}));
 
+                    }else{
+                        ws.send(JSON.stringify({options: { type: "error" }, package: "no game with code:" + code}));
+                    }
+                    break;
+
+                case "color_change":
+                    var options = message.options;
+                    var game = games[options.code];
+                    if(game){
+                        var package = message.package;
+                        var client = game.clients[package.fromColor];
+                        
+                        if(game.clients[package.toColor]){
+                            ws.send(JSON.stringify({options: { type: "error" }, package: "there is already a client with color: " + package.toColor}));
+                        }else if(!client){
+                            ws.send(JSON.stringify({options: { type: "error" }, package: "there is no client with color: " + package.fromColor}));
+                        }else{
+                            game.clients[package.fromColor] = null;
+                            game.clients[package.toColor] = client;
+                            client.send(JSON.stringify({options: { type: "color_change", color: package.toColor}}));
+                            game.host.send(JSON.stringify(message));
+                        }
+                        
                     }else{
                         ws.send(JSON.stringify({options: { type: "error" }, package: "no game with code:" + code}));
                     }
