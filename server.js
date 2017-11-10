@@ -59,9 +59,14 @@ wws.on("connection", (ws, req) => {
                             ws.send(JSON.stringify({options: { type: "error" }, package: "game is full"}));
                         }else{
                             game.count++;
-                            index = game.count;
-                            game.clients[index] = ws;
-                            var host = games[code].host;
+                            var index;
+                            for (index = 0; index < maxPlayers; index++) {
+                                if(game.clients[index] == null){
+                                    game.clients[index] = ws;
+                                    break;
+                                }
+                            }
+                            var host = game.host;
                             host.send(JSON.stringify({options: { type: "client_joined", color: index}}));
                             ws.send(JSON.stringify({options: { type: "color_change", color: index}}))
                         }
@@ -96,6 +101,7 @@ wws.on("connection", (ws, req) => {
                     }
                     break;
                 default:
+                    ws.send(JSON.stringify({options: { type: "error" }, package: "no handler for: " + message.options.type}))
                     break;
             }
         }
