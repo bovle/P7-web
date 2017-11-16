@@ -59,7 +59,6 @@ wws.on("connection", (ws, req) => {
                             ws.send(JSON.stringify({options: { type: "error" }, package: "game is full"}));
                         }else{
                             game.count++;
-                            var index;
                             for (index = 1; index <= maxPlayers; index++) {
                                 if(!game.clients[index]){
                                     game.clients[index] = ws;
