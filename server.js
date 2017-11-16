@@ -60,7 +60,7 @@ wws.on("connection", (ws, req) => {
                         }else{
                             game.count++;
                             var index;
-                            for (index = 0; index < maxPlayers; index++) {
+                            for (index = 1; index <= maxPlayers; index++) {
                                 if(!game.clients[index]){
                                     game.clients[index] = ws;
                                     break;
