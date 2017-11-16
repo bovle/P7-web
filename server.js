@@ -131,6 +131,8 @@ wws.on("connection", (ws, req) => {
     });
 
     ws.on("close", (data) => {
+        console.log(code);
+        console.log(index);
         if(code){
             var game = games[code];
             if(game){
