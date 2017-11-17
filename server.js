@@ -134,6 +134,7 @@ wws.on("connection", (ws, req) => {
             var game = games[code];
             if(game){
                 if(index){
+                    game.count--;
                     game.clients[index] = null;
                     var host = game.host;
                     host.send(JSON.stringify({options: {type: "client_disconnected", color: index}}));
