@@ -130,6 +130,7 @@ wws.on("connection", (ws, req) => {
     });
 
     ws.on("close", (data) => {
+        console.log(req.connection.remoteAddress + " disconnected from the server\n");
         if(code){
             var game = games[code];
             if(game){
