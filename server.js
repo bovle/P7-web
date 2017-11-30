@@ -4,6 +4,8 @@ const http = require('http');
 const WebSocket = require('ws');
 const app = express();
 
+console.log(__dirname);
+
 // WebGl output folder
 app.use(express.static(path.join(__dirname, '/WebGl_build')));
 
