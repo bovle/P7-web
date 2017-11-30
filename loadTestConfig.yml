@@ -2,7 +2,7 @@
     target: "ws://p7-webserver.herokuapp.com"
     phases:
       - duration: 10
-        arrivalRate: 5
+        arrivalRate: 50
     ws:
       # Ignore SSL certificate errors
       # - useful in *development* with self-signed certs
@@ -11,3 +11,4 @@
     - engine: "ws"
       flow:
         - send: "{\"options\": {\"type\": \"host_connection\"}}"
+        - think: 10

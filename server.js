@@ -4,12 +4,12 @@ const http = require('http');
 const WebSocket = require('ws');
 const app = express();
 
-// Angular DIST output folder
-app.use(express.static(path.join(__dirname, '/dist')));
+// WebGl output folder
+app.use(express.static(path.join(__dirname, '/WebGl build')));
 
-// Send all other requests to the Angular app
+// Send all other requests to the WebGl app
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '/dist/index.html'));
+    res.sendFile(path.join(__dirname, '/WebGl build/index.html'));
 });
 
 //Set Port
