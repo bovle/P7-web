@@ -7,11 +7,11 @@ const app = express();
 console.log(__dirname);
 
 // WebGl output folder
-app.use(express.static('WebGl_build'));
+app.use(express.static(path.join(__dirname, '/WebGL_build')));
 
 // Send all other requests to the WebGl app
 app.get('*', (req, res) => {
-    res.sendFile('WebGl_build/index.html');
+    res.sendFile(path.join(__dirname, '/WebGL_build/index.html'));
 });
 
 //Set Port
