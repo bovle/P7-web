@@ -5,11 +5,11 @@ const WebSocket = require('ws');
 const app = express();
 
 // WebGl output folder
-app.use(express.static(path.join(__dirname, '/WebGl build')));
+app.use(express.static(path.join(__dirname, '/WebGl_build')));
 
 // Send all other requests to the WebGl app
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '/WebGl build/index.html'));
+    res.sendFile(path.join(__dirname, '/WebGl_build/index.html'));
 });
 
 //Set Port
