@@ -81,10 +81,9 @@ wws.on("connection", (ws, req) => {
                     var game = games[options.code];
                     if(game){
                         var client = game.clients[options.color];
-                        if(client){
+                        if(client)
                             client.send(JSON.stringify({options: { type: "package_from_host", packageType: options.packageType }, package: message.package}));
-                            break;
-                        }else
+                        else
                             ws.send(JSON.stringify({options: { type: "error" }, package: "no client with color:" + options.color}));
                     }else
                         ws.send(JSON.stringify({options: { type: "error" }, package: "no game with code:" + options.code}));
